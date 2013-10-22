@@ -4,14 +4,26 @@ from string import punctuation
 list_tweet = []
 words = []
 list_all_tweets = []
+"""
+Made the connection to the database implemented by the package MySQLdb
+"""
 con = mdb.connect('localhost', 'root', 'e', 'tweet_db')
-print con
+#print con
+"""
+Opening the file BJP.json in read mode!
+f is json object
+python_data has same contents as f but its
+a python data structure. 
+"""
 with open('BJP.json','r') as f:
     for line in f:
         python_data = json.loads(line)
 
-'''with open('stopwords.txt','r') as f1:
-    for words in stopwords:'''
+'''
+To implement stopwords :
+with open('stopwords.txt','r') as f1:
+    for words in stopwords:
+'''
            
 pos_sent = open("positive.txt").read()
 positive_words=pos_sent.split('\n')
@@ -63,11 +75,6 @@ for tweet in python_data['statuses']:
         cursor = con.cursor()
         #print "INSERT INTO `tweetdb`.`tweet1`(`LAT`,`LONGI`,`LINK`,`TWEET`,`POLARITY`) VALUES('1','2','"+link+"','"+originalTweet+"','"+polarity+"')"
         cursor.execute("INSERT INTO `tweetdb`.`tweet1`(`LAT`,`LONGI`,`LINK`,`TWEET`,`POLARITY`) VALUES('1','2','"+link+"','"+repairedTweet+"','"+polarity+"','"+tweetLocation+"')")
-        '''cursor.execute('INSERT INTO tweet1(`LAT`,`LONGI`,) VALUES(1)')
-        cursor.execute('INSERT INTO tweet1(`LONGI`) VALUES(2)')
-        cursor.execute('INSERT INTO tweet1(`LINK`) VALUES(`'+link+'`)')
-        cursor.execute('INSERT INTO tweet1(`TWEET`) VALUES(`'+originalTweet+'`)')
-        cursor.execute('INSERT INTO tweet1(`POLARITY`) VALUES(`'+polarity+'`)')'''
-          
+               
         cursor.close()
         print "Import to MySQL is over"            
