@@ -54,9 +54,9 @@ class Process(object):
             positive_words = self.pos_words()
             negative_words = self.neg_words()
             for word in words:
-                if word in positive_:
+                if word in positive_words:
                     self.positive_counter+=1
-                elif word in negative_:
+                elif word in negative_words:
                     self.negative_counter+=1    
             self.p = float(self.positive_counter)/float(len(words))
             self.n = float(self.negative_counter)/float(len(words))
@@ -66,5 +66,8 @@ class Process(object):
             
 pro = Process()
 pro.getTweets('BJP.json')
-pro.format_tweets()                 
+pro.format_tweets()
+pro2 = Process()
+pro2.getTweets('Congress.json')
+pro2.format_tweets()                 
                                             
