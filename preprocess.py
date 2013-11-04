@@ -1,13 +1,14 @@
 import json
 import MySQLdb as mdb
 from string import punctuation
+from geopy import geocoders
 list_tweet = []
 words = []
 list_all_tweets = []
 """
 Made the connection to the database implemented by the package MySQLdb
 """
-con = mdb.connect('localhost', 'root', 'e', 'tweet_db')
+con = mdb.connect('localhost', 'root', 'e', 'tweetdb')
 #print con
 """
 Opening the file BJP.json in read mode!
@@ -33,7 +34,10 @@ neg_sent = open("negative.txt").read()
 negative_words=neg_sent.split('\n')
 print negative_words[:10]
 negative_counter = 0
-
+def latlong(location):
+    g = geocoders.GoogleV3()
+    place, (lat, lng) = g.geocode(location)
+    return lat,lng
 
 def repair(string):
     string = string.lower()
@@ -44,12 +48,21 @@ def repair(string):
     
 for tweet in python_data['statuses']:
     print tweet["text"]
+    
+    
+    print tweet["entities"]["hashtags"]
     originalTweet = tweet["text"]
     tweetLocation = tweet["user"]["location"]
     repairedTweet = repair(tweet["text"])
     link = "http://twitter.com/%s" % tweet["user"]["screen_name"]
     #print "\n \n"
+    if("Hyderabad" or "hyderabad" in tweetLocation):
+        tweetLocation = "Andhra Pradesh"
+    else:
+        pass    
     print tweetLocation
+    lat, lng = latlong(tweetLocation)
+    print lat,lng
     print link
     #print repairedTweet
     list_tweet.append(repairedTweet)
@@ -71,10 +84,12 @@ for tweet in python_data['statuses']:
         polarity = 0
     
     polarity = str(polarity) 
-    with con:
+    '''with con:
         cursor = con.cursor()
         #print "INSERT INTO `tweetdb`.`tweet1`(`LAT`,`LONGI`,`LINK`,`TWEET`,`POLARITY`) VALUES('1','2','"+link+"','"+originalTweet+"','"+polarity+"')"
         cursor.execute("INSERT INTO `tweetdb`.`tweet1`(`LAT`,`LONGI`,`LINK`,`TWEET`,`POLARITY`) VALUES('1','2','"+link+"','"+repairedTweet+"','"+polarity+"','"+tweetLocation+"')")
                
         cursor.close()
-        print "Import to MySQL is over"            
+        print "Import to MySQL is over"   '''
+        
+                 
